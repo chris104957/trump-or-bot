@@ -89,7 +89,7 @@ class HighScores(TemplateView):
                 ),
             )
             .filter(answered_questions=20)
-            .order_by('-total_score')[:10]
+            .order_by('-total_score')[:50]
         )
         context['high_scores'] = high_scores
         return context
