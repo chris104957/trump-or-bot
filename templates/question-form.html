@@ -8,42 +8,23 @@
     </div>
     <div class="col col-sm-12">
         <div class="row row-sm12 justify-content-md-center">
-            <div class="col col-sm-6">
-                <h4>Option A</h4>
-                <div class="card">
+            {% for answer in answers %}
+            <div class="col col-sm-3">
+                <h4>Option {{ answer.option }}</h4>
+                <div class="card" style="min-height: 250px !important;">
                     <div class="card-body">
                         <h5 class="card-title">
                             Donald J. Trump
                         </h5>
                         <h6 class="card-subtitle mb-2 text-muted">@realDonaldTrump</h6>
                         <p class="text">
-                            {% if question.correct_answer == 'A' %}
-                                {{ question.real_tweet.content }}
-                            {% else %}
-                                {{ question.fake_tweet.content }}
-                            {% endif %}
+                            {{ answer.text }}
                         </p>
                     </div>
                 </div>
             </div>
-            <div class="col col-sm-6">
-                <h4>Option B</h4>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            Donald J. Trump
-                        </h5>
-                        <h6 class="card-subtitle mb-2 text-muted">@realDonaldTrump</h6>
-                        <p class="text">
-                            {% if question.correct_answer == 'B' %}
-                                {{ question.real_tweet.content }}
-                            {% else %}
-                                {{ question.fake_tweet.content }}
-                            {% endif %}
-                        </p>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
+
         </div>
     </div>
     <div class="col col-sm-12">
@@ -52,15 +33,27 @@
                 {% csrf_token %}
                 <h3 class="mt-5">Your answer</h3>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="choice" id="id_choice_1" value="A" checked>
+                  <input class="form-check-input" type="radio" name="choice" id="id_choice_0" value="A">
                   <label class="form-check-label" for="id_choice_0">
                     Option A
                   </label>
                 </div>
-                <div class="form-check mb-3">
-                  <input class="form-check-input" type="radio" name="choice" id="id_choice_1" value="B" checked>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="choice" id="id_choice_1" value="B">
                   <label class="form-check-label" for="id_choice_1">
                     Option B
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="choice" id="id_choice_2" value="C">
+                  <label class="form-check-label" for="id_choice_2">
+                    Option C
+                  </label>
+                </div>
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="radio" name="choice" id="id_choice_3" value="D">
+                  <label class="form-check-label" for="id_choice_3">
+                    Option D
                   </label>
                 </div>
                 <input type="submit" class="btn btn-primary btn-lg btn-block mb-5" value="Submit answer">

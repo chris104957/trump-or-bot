@@ -11,7 +11,12 @@ class GameForm(forms.Form):
 
 class QuestionForm(forms.Form):
     choice = forms.ChoiceField(
-        choices=[('A', 'Option A'), ('B', 'Option B')], widget=forms.RadioSelect()
+        choices=[
+            ('A', 'Option A'),
+            ('B', 'Option B'),
+            ('C', 'Option C'),
+            ('D', 'Option D')
+        ], widget=forms.RadioSelect()
     )
 
     def __init__(self, *args, **kwargs):

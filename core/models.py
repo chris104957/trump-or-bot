@@ -3,12 +3,12 @@ import random
 
 
 def get_choice():
-    return random.choice(['A', 'B'])
+    return random.choice(['A', 'B', 'C', 'D'])
 
 
 class TweetManager(models.Manager):
-    def select_random(self):
-        ids = self.all().values_list('pk', flat=True)
+    def select_random(self, **filters):
+        ids = self.filter(**filters).values_list('pk', flat=True)
         return self.get(pk=random.choice(ids))
 
 
@@ -18,11 +18,12 @@ class GameManager(models.Manager):
         obj = self.create(player=player)
 
         for i in range(20):
-            Question.objects.create(
+            q = Question.objects.create(
                 game=obj,
-                real_tweet=RealTweet.objects.select_random(),
-                fake_tweet=FakeTweet.objects.select_random(),
+                real_tweet=RealTweet.objects.select_random(content__gte=100),
             )
+            for i in range(3):
+                q.fake_tweets.add(FakeTweet.objects.select_random())
 
         return obj
 
@@ -62,7 +63,7 @@ class Game(models.Model):
 class Question(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='questions')
     real_tweet = models.ForeignKey(RealTweet, on_delete=models.CASCADE)
-    fake_tweet = models.ForeignKey(FakeTweet, on_delete=models.CASCADE)
+    fake_tweets = models.ManyToManyField(FakeTweet)
     correct_answer = models.CharField(max_length=2, default=get_choice)
 
     answer = models.CharField(

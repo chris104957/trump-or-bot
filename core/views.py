@@ -24,7 +24,15 @@ class QuestionView(FormView):
     def get_context_data(self, **kwargs):
         game = get_object_or_404(Game, pk=self.kwargs['game'])
         context = super(QuestionView, self).get_context_data(**kwargs)
-        context['question'] = game.get_question_by_index(self.kwargs['question'])
+        question = game.get_question_by_index(self.kwargs['question'])
+        context['question'] = question
+        mappings = dict(A=0, B=1, C=2, D=3)
+        reverse_mappings = dict(enumerate(['A','B','C','D']))
+        answers = [a.content for a in question.fake_tweets.all()]
+        index = mappings[question.correct_answer]
+        answers.insert(index, question.real_tweet.content)
+        answers = [dict(option=reverse_mappings[i], text=x) for i, x in enumerate(answers)]
+        context['answers'] = answers
         context['number'] = self.kwargs['question']
         return context
 
@@ -46,7 +54,9 @@ class AnswerView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(AnswerView, self).get_context_data(**kwargs)
         game = get_object_or_404(Game, pk=self.kwargs['game'])
-        context['question'] = game.get_question_by_index(self.kwargs['question'])
+        question = game.get_question_by_index(self.kwargs['question'])
+        context['question'] = question
+
         if self.kwargs['question'] >= game.questions.count():
             context['next'] = reverse('results', args=(self.kwargs['game'],))
             context['last'] = True

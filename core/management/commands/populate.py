@@ -13,14 +13,18 @@ class Command(BaseCommand):
 
         with open(os.path.join(data_path, 'cleaned_tweets.txt'), 'r') as f:
             for line in f.readlines():
+                print(f'handling real tweet: {line}')
                 RealTweet.objects.get_or_create(content=line)
 
         real_tweet_count = RealTweet.objects.count()
-
+        #
         with open(os.path.join(data_path, 'model.json')) as f:
             model_json = f.read()
 
         model = markovify.Text.from_json(model_json)
 
         for i in range(real_tweet_count):
-            FakeTweet.objects.get_or_create(content=model.make_short_sentence(280))
+            content = model.make_short_sentence(280, min_chars=100, retries=100)
+            if content:
+                print(f'Making fake tweet: {content}')
+                FakeTweet.objects.get_or_create(content=content)
