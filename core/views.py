@@ -6,7 +6,6 @@ from core.forms import GameForm, QuestionForm
 from core.models import Game
 from django.shortcuts import get_object_or_404
 from django.db.models import Count, Case, When, IntegerField
-from django.db.models.functions import Length
 
 
 class NewGameView(FormView):
@@ -74,7 +73,8 @@ class HighScores(TemplateView):
         context = super(HighScores, self).get_context_data(**kwargs)
 
         high_scores = (
-            Game.objects.filter(questions__answer__isnull=False).annotate(
+            Game.objects.filter(questions__answer__isnull=False)
+            .annotate(
                 total_score=Count(
                     Case(
                         When(questions__answer='REAL', then=1),
@@ -84,14 +84,12 @@ class HighScores(TemplateView):
                 answered_questions=Count(
                     Case(
                         When(questions__answer__in=['REAL', 'FAKE'], then=1),
-                        output_field=IntegerField()
-                    ),
-
-                )
+                        output_field=IntegerField(),
+                    )
+                ),
             )
             .filter(answered_questions=20)
             .order_by('-total_score')[:10]
         )
-        print(high_scores)
         context['high_scores'] = high_scores
         return context
