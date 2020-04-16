@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class="row justify-content-md-center">
+    <div class="col col-sm-12 justify-content-md-center">
+        <h2>
+           {% if question.answer == 'REAL' %}
+               Correct!
+           {% else %}
+               Wrong!
+           {% endif %}
+        </h2>
+        <a href="{{ next }}" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">
+            {% if last %}See results{% else %}Next question{% endif %}
+        </a>
+    </div>
+
+
+    </div>
+{% endblock %}

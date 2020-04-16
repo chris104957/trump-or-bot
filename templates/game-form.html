@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+   <form method="post">{% csrf_token %}
+       <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">@</span>
+
+          </div>
+
+
+
+          <input type="text" class="form-control" name="player_name" id="player_name_id" placeholder="Player name" aria-label="Username" aria-describedby="basic-addon1">
+
+        </div>
+        {% for error in form.player_name.errors %}
+            <div class="alert alert-danger" role="alert">
+              {{ error }}
+             </div>
+           {%  endfor %}
+        <input type="submit" class="btn btn-primary btn-lg btn-block"  value="Start game">
+    </form>
+
+{% endblock %}

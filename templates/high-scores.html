@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class="row justify-content-md-center">
+        <div class="col col-sm-12 mb-5">
+            <a href="/new-game" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Start game</a>
+        </div>
+        {% if high_scores %}
+        <div class="col col-sm-12">
+            <h2>Hall of Fame</h2>
+
+            <ol class="list-group mb-3">
+                {% for score in high_scores %}
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <div>
+                            <h6 class="my-0">
+                                {{ score.player.name }}
+                            </h6>
+                        </div>
+                        <span class="text-muted">{{ score.score }} / {{ score.questions.count }}</span>
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+        {% endif %}
+    </div>
+
+
+
+{% endblock %}
