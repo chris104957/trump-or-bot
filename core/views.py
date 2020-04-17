@@ -40,8 +40,10 @@ class QuestionView(FormView):
         game = Game.objects.get(pk=self.kwargs['game'])
         question = game.get_question_by_index(self.kwargs['question'])
         answer = form.return_choice()
+
         if not question.answer:
             question.answer = 'REAL' if answer == question.correct_answer else 'FAKE'
+            question.selected_answer = answer
             question.save()
         return HttpResponseRedirect(
             reverse('answer', args=(self.kwargs['game'], self.kwargs['question']))
@@ -56,6 +58,13 @@ class AnswerView(TemplateView):
         game = get_object_or_404(Game, pk=self.kwargs['game'])
         question = game.get_question_by_index(self.kwargs['question'])
         context['question'] = question
+        mappings = dict(A=0, B=1, C=2, D=3)
+        reverse_mappings = dict(enumerate(['A', 'B', 'C', 'D']))
+        answers = [a.content for a in question.fake_tweets.all()]
+        index = mappings[question.correct_answer]
+        answers.insert(index, question.real_tweet.content)
+        answers = [dict(option=reverse_mappings[i], text=x, correct=question.real_tweet.content == x, selected=question.selected_answer == reverse_mappings[i]) for i, x in enumerate(answers)]
+        context['answers'] = answers
 
         if self.kwargs['question'] >= game.questions.count():
             context['next'] = reverse('results', args=(self.kwargs['game'],))

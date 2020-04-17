@@ -1,20 +1,63 @@
 {% extends 'base.html' %}
 
-
 {% block content %}
     <div class="row justify-content-md-center">
-    <div class="col col-sm-12 justify-content-md-center">
-        <h2>
-           {% if question.answer == 'REAL' %}
-               Correct!
-           {% else %}
-               Wrong!
-           {% endif %}
+    <div class="col col-sm-12 justify-content-md-center" >
+        <h2
+            {% if question.answer == 'REAL' %}
+                class="text-success"
+            {% else %}
+                class="text-danger"
+            {% endif %}
+        >
+            {% if question.answer == 'REAL' %}
+                Correct!
+            {% else %}
+                Wrong!
+            {% endif %}
         </h2>
-        <a href="{{ next }}" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">
-            {% if last %}See results{% else %}Next question{% endif %}
-        </a>
     </div>
+    <div class="col col-sm-12">
+        <div class="row row-sm12 justify-content-md-center">
+            {% for answer in answers %}
+            <div class="col col-sm-3">
+                <h4>Option {{ answer.option }}</h4>
+                <div class="card green
+                    {% if answer.correct %}
+                        text-white bg-success
+                    {% elif answer.selected %}
+                        text-white bg-danger
+                    {% endif %}
+                    " style="min-height: 250px !important;" >
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Donald J. Trump
+                        </h5>
+                        <h6 class="card-subtitle mb-2
+                        {% if answer.correct or answer.selected %}
+                            text-white
+                        {% else %}
+                            text-muted
+                        {% endif %}
+                        ">@realDonaldTrump</h6>
+                        <p class="text">
+                            {{ answer.text }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    <div class="col col-sm-12">
+        <div class="row row-sm12 justify-content-md-center my-5">
+            <a href="{{ next }}" class="btn btn-primary btn-lg" role="button" aria-pressed="true">
+                {% if last %}See results{% else %}Next question{% endif %}
+            </a>
+        </div>
+    </div>
+
 
 
     </div>

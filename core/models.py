@@ -65,6 +65,7 @@ class Question(models.Model):
     real_tweet = models.ForeignKey(RealTweet, on_delete=models.CASCADE)
     fake_tweets = models.ManyToManyField(FakeTweet)
     correct_answer = models.CharField(max_length=2, default=get_choice)
+    selected_answer = models.CharField(max_length=2, blank=True, null=True)
 
     answer = models.CharField(
         max_length=10, choices=(('REAL', 'REAL'), ('FAKE', 'FAKE')), blank=True
